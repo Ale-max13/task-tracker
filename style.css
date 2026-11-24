@@ -1,3 +1,74 @@
+/* ===== Цвета тем =====
+   Все цвета собраны здесь в «переменные» — это имена вида --page-bg.
+   Ниже в правилах вместо самого цвета пишем var(--page-bg).
+   Чтобы сменить тему, достаточно поменять значения переменных,
+   а сами правила остаются одинаковыми. */
+
+/* Светлая тема — включена по умолчанию.
+   :root — это тег <html>, самый верхний элемент страницы. */
+:root {
+  color-scheme: light; /* подсказка браузеру: полосы прокрутки и т. п. светлые */
+
+  --page-bg: linear-gradient(135deg, #e3d9ff, #ffd9ea, #fff4e1); /* фон страницы */
+  --text: #3b3550;                       /* основной текст */
+  --title: #1f2937;                      /* заголовок «Мои задачи» */
+
+  --card-bg: rgba(255, 255, 255, 0.75);  /* фон карточки */
+  --card-shadow: rgba(80, 60, 120, 0.12);/* тень карточки */
+
+  --input-bg: #ffffff;                   /* фон поля ввода */
+  --input-border: #d8ccf0;               /* рамка поля ввода */
+  --input-focus-border: #a98bea;         /* рамка поля, когда в нём курсор */
+  --input-focus-ring: rgba(169, 139, 234, 0.25); /* мягкое свечение вокруг поля */
+
+  --button-bg: #dcd0ff;                  /* фон кнопки «Добавить» */
+  --button-hover-bg: #cdbdfb;            /* фон кнопки при наведении */
+  --button-text: #2e2645;                /* текст на кнопке */
+
+  --checkbox-bg: #ffffff;                /* фон пустого чекбокса */
+  --checkbox-border: #a5b4fc;            /* рамка пустого чекбокса */
+  --checkbox-checked: #818cf8;           /* фон и рамка отмеченного чекбокса */
+  /* Галочка — маленькая картинка SVG прямо в коде, белая (stroke='white') */
+  --checkmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  --switcher-bg: rgba(255, 255, 255, 0.6);  /* фон «таблетки» переключателя */
+  --switcher-active-bg: #dcd0ff;            /* фон выбранной кнопки */
+  --switcher-active-text: #2e2645;          /* текст выбранной кнопки */
+}
+
+/* Тёмная тема — включается, когда theme.js ставит тегу <html>
+   метку data-theme="dark". Здесь меняем только значения переменных. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page-bg: linear-gradient(135deg, #1e1b4b, #3b1e3f, #2a2416);
+  --text: #e5e7eb;
+  --title: #e5e7eb;
+
+  --card-bg: rgba(30, 32, 48, 0.92);
+  --card-shadow: rgba(0, 0, 0, 0.4);     /* на тёмном фоне тень нужна гуще */
+
+  --input-bg: #161827;
+  --input-border: #3f4258;
+  --input-focus-border: #a5b4fc;
+  --input-focus-ring: rgba(165, 180, 252, 0.3);
+
+  --button-bg: #a5b4fc;
+  --button-hover-bg: #c7d2fe;            /* при наведении — чуть светлее */
+  --button-text: #1e1b4b;
+
+  --checkbox-bg: #161827;                /* пустой чекбокс тёмный, как поле ввода */
+  --checkbox-border: #a5b4fc;
+  --checkbox-checked: #a5b4fc;
+  /* На светлом сиреневом белая галочка плохо видна, поэтому она тёмная.
+     %23 — это закодированный знак #, то есть цвет #1e1b4b. */
+  --checkmark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%231e1b4b' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  --switcher-bg: rgba(30, 32, 48, 0.8);
+  --switcher-active-bg: #a5b4fc;
+  --switcher-active-text: #1e1b4b;
+}
+
 /* ===== Общие настройки ===== */
 
 /* box-sizing: border-box — ширина элемента считается вместе с отступами
@@ -9,17 +80,51 @@
 /* Вся страница */
 body {
   margin: 0;
-  /* Отступы по краям, чтобы карточка не прилипала к краям экрана на телефоне */
-  padding: 48px 16px;
+  /* Отступы по краям, чтобы карточка не прилипала к краям экрана на телефоне.
+     Сверху отступ больше — там место для переключателя тем. */
+  padding: 80px 16px 48px;
   /* Высота не меньше всего окна, чтобы градиент закрывал весь экран */
   min-height: 100vh;
-  /* Мягкий градиент: лавандовый → розовый → кремовый.
-     135deg — направление: из левого верхнего угла в правый нижний. */
-  background: linear-gradient(135deg, #e3d9ff, #ffd9ea, #fff4e1);
+  /* Мягкий градиент (цвета — в переменной --page-bg выше) */
+  background: var(--page-bg);
   /* Простой читаемый шрифт: берётся системный шрифт компьютера */
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 16px;
-  color: #3b3550; /* тёмный, слегка фиолетовый текст — мягче чисто чёрного */
+  color: var(--text);
+}
+
+/* ===== Переключатель тем ===== */
+
+/* «Таблетка» с тремя кнопками, слева вверху страницы */
+.theme-switcher {
+  position: absolute; /* ставим в точное место страницы */
+  top: 16px;
+  left: 16px;
+  display: flex;      /* кнопки в одну строку */
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px; /* очень большое скругление — получается «таблетка» */
+  background: var(--switcher-bg);
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+
+/* Кнопки переключателя */
+.theme-switcher button {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 14px;
+  border: none;
+  border-radius: 999px;
+  background: none;   /* невыбранные кнопки — без фона */
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Выбранная кнопка (aria-pressed="true") — подсвечена */
+.theme-switcher button[aria-pressed="true"] {
+  background: var(--switcher-active-bg);
+  color: var(--switcher-active-text);
+  font-weight: 600;
 }
 
 /* ===== Карточка трекера ===== */
@@ -28,12 +133,11 @@ body {
   max-width: 420px;   /* ширина не больше 420px, на узком экране — уже */
   margin: 0 auto;     /* auto слева и справа ставит карточку по центру */
   padding: 24px;      /* внутренний отступ от краёв карточки до содержимого */
-  /* Белый полупрозрачный фон: последнее число 0.75 — непрозрачность
-     (1 — совсем непрозрачный, 0 — невидимый) */
-  background: rgba(255, 255, 255, 0.75);
+  /* Полупрозрачный фон карточки */
+  background: var(--card-bg);
   border-radius: 20px; /* скруглённые углы */
-  /* Лёгкая тень: сдвиг вниз 8px, размытие 24px, очень прозрачный цвет */
-  box-shadow: 0 8px 24px rgba(80, 60, 120, 0.12);
+  /* Лёгкая тень: сдвиг вниз 8px, размытие 24px */
+  box-shadow: 0 8px 24px var(--card-shadow);
 }
 
 /* ===== Заголовок ===== */
@@ -47,7 +151,7 @@ h1 {
   font-weight: normal; /* у Pacifico есть только обычная толщина */
   font-size: 36px;
   text-align: center;
-  color: #1f2937; /* тёмный, почти чёрный */
+  color: var(--title);
 }
 
 /* ===== Поле ввода и кнопка «Добавить» ===== */
@@ -64,17 +168,17 @@ h1 {
   min-width: 0;         /* разрешаем полю сжиматься на узком экране */
   padding: 12px 14px;   /* крупнее за счёт внутренних отступов */
   font: inherit;        /* тот же шрифт, что у остальной страницы */
-  border: 1px solid #d8ccf0;
+  border: 1px solid var(--input-border);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--input-bg);
   color: inherit;
 }
 
-/* Поле, в котором сейчас мигает курсор: подсвечиваем лавандовой рамкой */
+/* Поле, в котором сейчас мигает курсор: подсвечиваем рамку */
 #task-input:focus {
   outline: none;
-  border-color: #a98bea;
-  box-shadow: 0 0 0 3px rgba(169, 139, 234, 0.25);
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 3px var(--input-focus-ring);
 }
 
 /* Кнопка «Добавить» */
@@ -84,14 +188,14 @@ h1 {
   font-weight: 600;     /* чуть жирнее обычного текста */
   border: none;
   border-radius: 12px;
-  background: #dcd0ff;  /* светло-лавандовый фон */
-  color: #2e2645;       /* тёмный текст */
+  background: var(--button-bg);
+  color: var(--button-text);
   cursor: pointer;
 }
 
-/* Кнопка «Добавить» при наведении — чуть темнее */
+/* Кнопка «Добавить» при наведении */
 #add-button:hover {
-  background: #cdbdfb;
+  background: var(--button-hover-bg);
 }
 
 /* ===== Список задач ===== */
@@ -131,19 +235,18 @@ h1 {
   width: 16px;                 /* размер квадратика */
   height: 16px;
   flex-shrink: 0;              /* не сжимать квадратик рядом с длинным текстом */
-  border: 2px solid #a5b4fc;   /* лавандовая рамка */
+  border: 2px solid var(--checkbox-border);
   border-radius: 4px;          /* слегка скруглённые углы */
-  background-color: #ffffff;   /* белый фон, пока галочки нет */
+  background-color: var(--checkbox-bg);
   cursor: pointer;
 }
 
 /* Отмеченный чекбокс (:checked — «когда галочка стоит»):
-   сиреневый фон и белая галочка */
+   цветной фон и галочка */
 #task-list input[type="checkbox"]:checked {
-  border-color: #818cf8;
-  background-color: #818cf8;
-  /* Белая галочка нарисована маленькой картинкой SVG прямо в коде */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  border-color: var(--checkbox-checked);
+  background-color: var(--checkbox-checked);
+  background-image: var(--checkmark);
   background-position: center;
   background-repeat: no-repeat;
 }

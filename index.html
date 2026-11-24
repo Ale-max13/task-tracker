@@ -24,10 +24,26 @@
 
   <!-- Подключаем файл со стилями (внешним видом страницы) -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Скрипт тем подключаем здесь, в head, а не в конце страницы:
+       так тема включается до того, как страница нарисуется,
+       и при обновлении не будет «вспышки» светлой темы. -->
+  <script src="theme.js"></script>
 </head>
 
 <!-- body — всё, что видно на странице -->
 <body>
+
+  <!-- Переключатель тем: три кнопки в одной «таблетке».
+       role="group" и aria-label сообщают программам экранного доступа,
+       что это одна группа кнопок «Тема оформления».
+       data-theme-choice — какую тему включает кнопка (читает theme.js).
+       aria-pressed — нажата ли кнопка; theme.js меняет это значение. -->
+  <div class="theme-switcher" role="group" aria-label="Тема оформления">
+    <button type="button" data-theme-choice="light" aria-pressed="false">☀️ Светлая</button>
+    <button type="button" data-theme-choice="dark" aria-pressed="false">🌙 Тёмная</button>
+    <button type="button" data-theme-choice="system" aria-pressed="false">💻 Системная</button>
+  </div>
 
   <!-- main — карточка трекера: в ней лежит всё содержимое.
        class="card" нужен, чтобы оформить карточку в style.css. -->
