@@ -15,6 +15,13 @@
   <!-- Название вкладки в браузере -->
   <title>Мои задачи</title>
 
+  <!-- Подключаем шрифт Pacifico из Google Fonts (для заголовка).
+       Первые две строки заранее открывают соединение с серверами шрифтов,
+       чтобы шрифт загрузился быстрее. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
   <!-- Подключаем файл со стилями (внешним видом страницы) -->
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,21 +29,29 @@
 <!-- body — всё, что видно на странице -->
 <body>
 
-  <!-- Главный заголовок страницы -->
-  <h1>Мои задачи</h1>
+  <!-- main — карточка трекера: в ней лежит всё содержимое.
+       class="card" нужен, чтобы оформить карточку в style.css. -->
+  <main class="card">
 
-  <!-- Поле, куда пользователь вводит текст новой задачи.
-       id нужен, чтобы потом найти это поле из JavaScript.
-       placeholder — серая подсказка, пока поле пустое. -->
-  <input type="text" id="task-input" placeholder="Что нужно сделать?">
+    <!-- Главный заголовок страницы -->
+    <h1>Мои задачи</h1>
 
-  <!-- Кнопка добавления задачи. Пока ничего не делает:
-       её «оживим» позже с помощью JavaScript. -->
-  <button type="button" id="add-button">Добавить</button>
+    <!-- Строка с полем ввода и кнопкой. div — просто «коробка»,
+         чтобы в style.css поставить поле и кнопку рядом. -->
+    <div class="add-row">
+      <!-- Поле, куда пользователь вводит текст новой задачи.
+           id нужен, чтобы потом найти это поле из JavaScript.
+           placeholder — серая подсказка, пока поле пустое. -->
+      <input type="text" id="task-input" placeholder="Что нужно сделать?">
 
-  <!-- Список задач. Пока пустой: пункты (li) будут
-       добавляться сюда из JavaScript. -->
-  <ul id="task-list"></ul>
+      <!-- Кнопка добавления задачи. Её «оживляет» JavaScript. -->
+      <button type="button" id="add-button">Добавить</button>
+    </div>
+
+    <!-- Список задач. Пункты (li) добавляются сюда из JavaScript. -->
+    <ul id="task-list"></ul>
+
+  </main>
 
   <!-- Подключаем файл с JavaScript.
        Ставим его в самом конце body, чтобы к моменту запуска скрипта
