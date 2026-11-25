@@ -12,6 +12,7 @@
   --page-bg: linear-gradient(135deg, #e3d9ff, #ffd9ea, #fff4e1); /* фон страницы */
   --text: #3b3550;                       /* основной текст */
   --title: #1f2937;                      /* заголовок «Мои задачи» */
+  --date-color: #4b5563;                 /* дата над карточкой */
 
   --card-bg: rgba(255, 255, 255, 0.75);  /* фон карточки */
   --card-shadow: rgba(80, 60, 120, 0.12);/* тень карточки */
@@ -44,6 +45,7 @@
   --page-bg: linear-gradient(135deg, #1e1b4b, #3b1e3f, #2a2416);
   --text: #e5e7eb;
   --title: #e5e7eb;
+  --date-color: #cbd5e1;
 
   --card-bg: rgba(30, 32, 48, 0.92);
   --card-shadow: rgba(0, 0, 0, 0.4);     /* на тёмном фоне тень нужна гуще */
@@ -125,6 +127,16 @@ body {
   background: var(--switcher-active-bg);
   color: var(--switcher-active-text);
   font-weight: 600;
+}
+
+/* ===== Дата над карточкой ===== */
+
+.today-date {
+  margin: 0 0 12px;      /* убираем отступ сверху, 12px снизу — до карточки */
+  text-align: center;    /* по центру */
+  font-size: 15px;
+  font-weight: normal;   /* обычный, не жирный */
+  color: var(--date-color);
 }
 
 /* ===== Карточка трекера ===== */

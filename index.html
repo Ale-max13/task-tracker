@@ -45,6 +45,10 @@
     <button type="button" data-theme-choice="system" aria-pressed="false">💻 Системная</button>
   </div>
 
+  <!-- Сегодняшняя дата над карточкой. Пока абзац пустой:
+       текст даты вписывает date.js. -->
+  <p id="today-date" class="today-date"></p>
+
   <!-- main — карточка трекера: в ней лежит всё содержимое.
        class="card" нужен, чтобы оформить карточку в style.css. -->
   <main class="card">
@@ -73,6 +77,9 @@
        Ставим его в самом конце body, чтобы к моменту запуска скрипта
        все элементы выше (поле, кнопка, список) уже были на странице. -->
   <script src="script.js"></script>
+
+  <!-- Скрипт, который показывает сегодняшнюю дату над карточкой -->
+  <script src="date.js"></script>
 
 </body>
 </html>
