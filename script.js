@@ -72,6 +72,18 @@ function createTaskElement(text, done) {
   label.appendChild(checkbox);
   label.appendChild(taskText);
 
+  // Создаём кнопку редактирования со значком карандаша.
+  const editButton = document.createElement('button');
+  editButton.type = 'button';
+  editButton.textContent = '✏️';
+  editButton.title = 'Изменить задачу';                  // всплывающая подсказка
+  editButton.setAttribute('aria-label', 'Изменить задачу'); // название для экранного доступа
+
+  // По нажатию на ✏️ превращаем текст задачи в поле ввода.
+  editButton.addEventListener('click', function () {
+    startEditing(taskText);
+  });
+
   // Создаём кнопку удаления со значком корзины.
   const deleteButton = document.createElement('button');
   deleteButton.type = 'button';
@@ -91,8 +103,10 @@ function createTaskElement(text, done) {
     // confirm показывает стандартное окно браузера с кнопками «ОК» и «Отмена».
     // Он возвращает true, если нажали «ОК», и false, если «Отмена».
     // В вопрос подставляем текст задачи, чтобы было видно, что именно удаляем.
+    // Берём его из taskText прямо сейчас — так после редактирования
+    // в окне будет уже новый текст.
     // Знак + склеивает кусочки текста в одну строку.
-    if (confirm('Удалить задачу «' + text + '»?')) {
+    if (confirm('Удалить задачу «' + taskText.textContent + '»?')) {
       // Нажали «ОК» — убираем этот пункт со страницы
       // и сохраняем список уже без него.
       taskItem.remove();
@@ -102,13 +116,84 @@ function createTaskElement(text, done) {
     // Нажали «Отмена» — ничего не делаем, задача остаётся.
   });
 
-  // Кладём в пункт списка сначала label (чекбокс и текст), потом кнопку.
-  // Кнопка лежит вне label, чтобы щелчок по ней не ставил галочку.
+  // Кладём в пункт списка: label (чекбокс и текст), потом ✏️, потом 🗑️.
+  // Кнопки лежат вне label, чтобы щелчок по ним не ставил галочку.
   taskItem.appendChild(label);
+  taskItem.appendChild(editButton);
   taskItem.appendChild(deleteButton);
 
   // Добавляем пункт в конец списка — теперь он появился на странице.
   taskList.appendChild(taskItem);
+}
+
+// Функция включает редактирование задачи.
+// taskText — span с текстом задачи, который нужно изменить.
+function startEditing(taskText) {
+  // Создаём поле ввода и кладём в него текущий текст задачи.
+  const editInput = document.createElement('input');
+  editInput.type = 'text';
+  editInput.className = 'edit-input';      // для оформления в style.css
+  editInput.value = taskText.textContent;
+  editInput.setAttribute('aria-label', 'Текст задачи');
+
+  // Прячем текст и ставим поле сразу после него.
+  // Сам span не удаляем, а только прячем: в нём остаётся прежний текст,
+  // чтобы при отмене его можно было просто показать снова.
+  taskText.hidden = true;
+  taskText.after(editInput);
+
+  // Ставим курсор в поле, в самый конец текста.
+  // setSelectionRange(начало, конец) выделяет текст; если начало и конец
+  // одинаковые, выделения нет — просто курсор в этом месте.
+  editInput.focus();
+  const end = editInput.value.length;
+  editInput.setSelectionRange(end, end);
+
+  // Флажок «редактирование уже закончено». Нужен, чтобы не сохранить дважды:
+  // например, Enter сохраняет и убирает поле, а браузер после этого может
+  // ещё сообщить «поле потеряло фокус» (blur) — второй раз ничего не делаем.
+  let finished = false;
+
+  // Функция завершает редактирование.
+  // save = true — сохранить изменения, save = false — отменить.
+  function finishEditing(save) {
+    if (finished) {
+      return;
+    }
+    finished = true;
+
+    if (save) {
+      // Обрезаем пробелы по краям.
+      const newText = editInput.value.trim();
+      // Пустой текст не сохраняем — останется прежний.
+      if (newText !== '') {
+        taskText.textContent = newText;
+      }
+    }
+
+    // Убираем поле и снова показываем текст.
+    editInput.remove();
+    taskText.hidden = false;
+
+    // Сохраняем список в localStorage (если текст не менялся — ничего страшного,
+    // просто запишется то же самое).
+    saveTasks();
+  }
+
+  // Enter — сохранить, Esc — отменить.
+  editInput.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      finishEditing(true);
+    } else if (event.key === 'Escape') {
+      finishEditing(false);
+    }
+  });
+
+  // blur — «поле потеряло фокус», то есть щёлкнули где-то вне поля.
+  // В этом случае сохраняем.
+  editInput.addEventListener('blur', function () {
+    finishEditing(true);
+  });
 }
 
 // Функция добавления новой задачи из поля ввода.
