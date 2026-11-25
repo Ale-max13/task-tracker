@@ -56,6 +56,22 @@
     <!-- Главный заголовок страницы -->
     <h1>Мои задачи</h1>
 
+    <!-- Прогресс: сколько задач выполнено. Строку и полоску заполняет
+         script.js. hidden — «спрятан»: пока задач нет, блок не виден,
+         script.js убирает hidden, когда появляется первая задача. -->
+    <div id="progress" class="progress" hidden>
+      <!-- Строка: слева «Прогресс», справа, например, «1 из 3 · 33%» -->
+      <div class="progress-row">
+        <span>Прогресс</span>
+        <span id="progress-text"></span>
+      </div>
+      <!-- Полоска: track — фон («дорожка»), fill — заполненная часть.
+           Ширину заполнения задаёт script.js в процентах. -->
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+
     <!-- Строка с полем ввода и кнопкой. div — просто «коробка»,
          чтобы в style.css поставить поле и кнопку рядом. -->
     <div class="add-row">
@@ -150,6 +166,11 @@
       <p class="empty-title">Задач пока нет</p>
       <p class="empty-hint">Добавь первую и начни свой день!</p>
     </div>
+
+    <!-- Плашка «Выполнено!» под списком. Видна, только когда отмечены
+         все задачи: hidden убирает и ставит script.js. -->
+    <!-- Эмодзи в отдельном span, чтобы в style.css сделать его крупнее текста -->
+    <p id="done-badge" class="done-badge" hidden><span class="done-emoji">🎉</span> Выполнено!</p>
 
   </main>
 

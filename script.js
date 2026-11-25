@@ -4,6 +4,12 @@ const taskInput = document.getElementById('task-input');   // поле ввод�
 const addButton = document.getElementById('add-button');   // кнопка «Добавить»
 const taskList = document.getElementById('task-list');     // список задач
 
+// Элементы прогресса
+const progressBlock = document.getElementById('progress');      // весь блок прогресса
+const progressText = document.getElementById('progress-text');  // «1 из 3 · 33%»
+const progressFill = document.getElementById('progress-fill');  // заполненная часть полоски
+const doneBadge = document.getElementById('done-badge');        // плашка «🎉 Выполнено!»
+
 // Имя, под которым список задач хранится в localStorage.
 // localStorage — это «маленькая память» браузера: то, что туда записано,
 // не пропадает после перезагрузки страницы и даже после закрытия браузера.
@@ -53,7 +59,8 @@ function createTaskElement(text, done) {
   // когда галочку ставят или снимают.
   checkbox.addEventListener('change', function () {
     updateStrike();
-    saveTasks(); // отметка изменилась — сохраняем список
+    saveTasks();      // отметка изменилась — сохраняем список
+    updateProgress(); // и пересчитываем прогресс
   });
 
   // Создаём <label> — «подпись» к чекбоксу.
@@ -90,6 +97,7 @@ function createTaskElement(text, done) {
       // и сохраняем список уже без него.
       taskItem.remove();
       saveTasks();
+      updateProgress();
     }
     // Нажали «Отмена» — ничего не делаем, задача остаётся.
   });
@@ -120,8 +128,48 @@ function addTask() {
   // Очищаем поле ввода, чтобы можно было сразу написать следующую задачу.
   taskInput.value = '';
 
-  // Список изменился — сохраняем.
+  // Список изменился — сохраняем и пересчитываем прогресс.
   saveTasks();
+  updateProgress();
+}
+
+// Функция пересчитывает прогресс и обновляет полоску.
+function updateProgress() {
+  // Сколько всего задач — считаем пункты <li> в списке.
+  const total = taskList.querySelectorAll('li').length;
+
+  // Сколько выполнено — считаем чекбоксы с галочкой.
+  // :checked — «отмеченные».
+  const done = taskList.querySelectorAll('input:checked').length;
+
+  // Задач нет — прячем прогресс и плашку и выходим из функции.
+  if (total === 0) {
+    progressBlock.hidden = true;
+    doneBadge.hidden = true;
+    return;
+  }
+
+  // Процент выполненных. Math.round округляет до целого:
+  // 1 из 3 — это 33,33…%, получится 33.
+  const percent = Math.round((done / total) * 100);
+
+  // Показываем блок прогресса и пишем текст, например «1 из 3 · 33%».
+  progressBlock.hidden = false;
+  progressText.textContent = done + ' из ' + total + ' · ' + percent + '%';
+
+  // Ширина заполнения — тот же процент.
+  progressFill.style.width = percent + '%';
+
+  // Все ли задачи выполнены?
+  const allDone = done === total;
+
+  // classList.toggle('is-complete', allDone) — добавить класс is-complete,
+  // если allDone равно true, и убрать, если false. По этому классу
+  // style.css красит полоску градиентом.
+  progressFill.classList.toggle('is-complete', allDone);
+
+  // Плашка «Выполнено!» видна, только когда выполнено всё.
+  doneBadge.hidden = !allDone; // ! — «не»: если всё выполнено, hidden = false
 }
 
 // Функция сохраняет все задачи со страницы в localStorage.
@@ -183,5 +231,7 @@ taskInput.addEventListener('keydown', function (event) {
   }
 });
 
-// При открытии страницы сразу загружаем сохранённые задачи.
+// При открытии страницы сразу загружаем сохранённые задачи
+// и показываем прогресс по ним.
 loadTasks();
+updateProgress();
